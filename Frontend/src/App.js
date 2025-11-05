@@ -69,7 +69,7 @@ function App() {
       <div className="container">
         {/* --- BARU: Header dengan Counter --- */}
         <div className="header">
-          <h1>To Do List</h1>
+          <h1>Mantap Jiwa</h1>
           <div className="task-counter">
             {pendingTodos === 0
               ? "Semua tugas selesai!"

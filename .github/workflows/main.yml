@@ -28,7 +28,7 @@ jobs:
         context: ./BackEnd # Lokasi Dockerfile backend
         file: ./BackEnd/Dockerfile
         push: true
-        tags: driansyh/todo-backend:latest 
+        tags: driansyh/back-end:latest 
 
     # 4. Build dan Push image Frontend
     - name: Build and push frontend image
@@ -37,4 +37,4 @@ jobs:
         context: ./Frontend # Lokasi Dockerfile frontend
         file: ./Frontend/Dockerfile
         push: true
-        tags: driansyh/todo-frontend:latest
+        tags: driansyh/front-end:latest
