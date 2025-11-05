@@ -14,18 +14,17 @@ services:
 
   # Service 2: Frontend (React/Nginx)
   client:
-    build: ./Frontend
+    image: driansyh/front-end:latest # <-- Gunakan image dari Docker Hub
     ports:
-      # Browser akan buka localhost:3000
-      - "3000:80" 
+      - "3000:80"
     depends_on:
       - server # Tunggu server jalan dulu
 
   # Service 3: Database (MongoDB)
   mongo:
-    image: mongo:latest
+    image: driansyh/back-end:latest  # <-- Ganti ini dengan nama image backend Anda
     ports:
-      - "27017:27017" # Agar Mongo Compass bisa lihat
+      - "5000:5000"
     volumes:
       - mongo-data:/data/db
 
