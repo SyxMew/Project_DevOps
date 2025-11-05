@@ -1,0 +1,20 @@
+# 1. Mulai dari "dapur" Node.js versi 18
+FROM node:18-alpine
+
+# 2. Tentukan di mana kita akan bekerja di dalam container
+WORKDIR /app
+
+# 3. Salin file package.json dulu (ini trik agar lebih cepat)
+COPY package*.json ./
+
+# 4. Install semua bahan-bahan (dependencies)
+RUN npm install
+
+# 5. Salin semua sisa kode
+COPY . .
+
+# 6. Bilang ke Docker kita akan pakai port 5000
+EXPOSE 5000
+
+# 7. Perintah untuk menjalankan aplikasi saat container menyala
+CMD ["node", "server.js"]
