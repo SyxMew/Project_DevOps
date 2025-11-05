@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 5000
 
 # 7. Perintah untuk menjalankan aplikasi saat container menyala
-CMD ["node", "server.js"]
+CMD ["node", "index.js"]

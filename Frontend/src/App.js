@@ -136,10 +136,8 @@ function App() {
                   <span className="todo-text">
                     {todo.text}
                   </span>
-                  {/* Kita bisa tambahkan tag atau detail lain di sini nanti */}
                   <div className="task-meta">
                     <span className="task-tag design">Design</span>
-                    {/* <span className="task-date">Today - 09:00 AM</span> */}
                   </div>
                 </div>
               </div>

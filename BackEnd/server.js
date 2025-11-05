@@ -3,24 +3,21 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-app.use(express.json()); // Middleware untuk parsing JSON
-app.use(cors()); // Middleware untuk CORS
+app.use(express.json()); 
+app.use(cors()); 
 
-// Jika Anda menjalankan 'node server.js' (Metode LOKAL/HYBRID):
+
 const dbURL = 'mongodb://mongo:27017/Database';
-
-// Jika Anda menjalankan 'docker-compose up' (Metode FULL DOCKER):
-// const dbURL = 'mongodb://mongo:27017/todolist';
 
 
 mongoose.connect(dbURL)
     .then(() => console.log("MongoDB terhubung..."))
     .catch(err => console.log(err));
 
-// Import model SETELAH koneksi
+
 const Todo = require('./models/Todo');
 
-// --- RUTE CRUD LENGKAP ---
+
 
 // 1. READ (Get all todos)
 app.get('/todos', async (req, res) => {
@@ -46,23 +43,20 @@ app.post('/todos', async (req, res) => {
 });
 
 // 3. UPDATE (Toggle complete)
-// INI YANG KEMUNGKINAN BESAR HILANG DARI KODE ANDA
 app.put('/todos/:id', async (req, res) => {
     try {
         const todo = await Todo.findById(req.params.id);
         if (!todo) return res.status(404).json({ msg: 'Todo tidak ditemukan' });
 
-        // Balik statusnya (dari false ke true, atau true ke false)
         todo.completed = !todo.completed; 
         const updatedTodo = await todo.save();
-        res.json(updatedTodo); // Kirim data yang sudah di-update kembali ke frontend
+        res.json(updatedTodo); 
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 });
 
 // 4. DELETE (Remove todo)
-// INI JUGA KEMUNGKINAN BESAR HILANG DARI KODE ANDA
 app.delete('/todos/:id', async (req, res) => {
     try {
         const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
