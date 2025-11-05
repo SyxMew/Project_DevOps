@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-// --- BARU: Import Ikon ---
-import { FaPlus, FaTrashAlt, FaRegCircle, FaCheckCircle } from 'react-icons/fa';
+import { FaPlus, FaTrashAlt, FaRegCircle, FaCheckCircle, FaClipboardList, FaUsers, FaCalendarAlt, FaCog, FaThList } from 'react-icons/fa'; // Menambahkan ikon untuk sidebar
 import './App.css'; 
 
 const API_URL = 'http://localhost:5000';
@@ -10,7 +9,6 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [newTodoText, setNewTodoText] = useState('');
 
-  // (READ)
   useEffect(() => {
     fetchTodos();
   }, []);
@@ -20,26 +18,23 @@ function App() {
       const response = await axios.get(`${API_URL}/todos`);
       setTodos(response.data);
     } catch (error) {
-      console.error("Error mengambil todos:", error);
+      console.error("Error fetching todos:", error);
     }
   };
 
-  // (CREATE)
   const addTodo = async (e) => {
     e.preventDefault();
     if (newTodoText.trim() === '') return;
 
     try {
       const response = await axios.post(`${API_URL}/todos`, { text: newTodoText });
-      // Tambah di awal list untuk efek visual yang lebih baik
-      setTodos([response.data, ...todos]); 
+      setTodos([response.data, ...todos]);
       setNewTodoText('');
     } catch (error) {
-      console.error("Error menambah todo:", error);
+      console.error("Error adding todo:", error);
     }
   };
 
-  // (UPDATE)
   const toggleComplete = async (id) => {
     try {
       const response = await axios.put(`${API_URL}/todos/${id}`);
@@ -47,77 +42,111 @@ function App() {
         todo._id === id ? response.data : todo
       ));
     } catch (error) {
-      console.error("Error update todo:", error);
+      console.error("Error updating todo:", error);
     }
   }
 
-  // (DELETE)
   const deleteTodo = async (id) => {
     try {
       await axios.delete(`${API_URL}/todos/${id}`);
       setTodos(todos.filter(todo => todo._id !== id));
     } catch (error) {
-      console.error("Error menghapus todo:", error);
+      console.error("Error deleting todo:", error);
     }
   };
 
-  // --- BARU: Hitung sisa To-Do ---
   const pendingTodos = todos.filter(todo => !todo.completed).length;
 
   return (
-    <div className="app">
-      <div className="container">
-        {/* --- BARU: Header dengan Counter --- */}
-        <div className="header">
-          <h1>Mantap Jiwa</h1>
-          <div className="task-counter">
-            {pendingTodos === 0
-              ? "Semua tugas selesai!"
-              : `Anda punya ${pendingTodos} tugas tersisa`
-            }
-          </div>
+    <div className="dashboard-app">
+      <aside className="sidebar">
+        <div className="logo">
+          My Task
         </div>
+        <nav className="main-nav">
+          <ul>
+            <li className="nav-item active">
+              <FaClipboardList className="nav-icon" />
+              <span>Project Overview</span>
+            </li>
+            <li className="nav-item">
+              <FaUsers className="nav-icon" />
+              <span>Team</span>
+            </li>
+            <li className="nav-item">
+              <FaCalendarAlt className="nav-icon" />
+              <span>Calendar</span>
+            </li>
+            <li className="nav-item">
+              <FaCog className="nav-icon" />
+              <span>Settings</span>
+            </li>
+          </ul>
+        </nav>
+      </aside>
 
-        {/* --- Form yang diperbarui dengan Ikon --- */}
-        <form className="add-form" onSubmit={addTodo}>
-          <input
-            type="text"
-            value={newTodoText}
-            onChange={(e) => setNewTodoText(e.target.value)}
-            placeholder="Tambahkan tugas baru..."
-          />
-          <button type="submit" aria-label="Tambah tugas">
-            <FaPlus />
+      <main className="main-content">
+        <header className="main-header">
+          <div className="project-info">
+            <h2>My To-Do Project</h2>
+            <span className="task-counter">
+              {pendingTodos === 0
+                ? "All tasks completed!"
+                : `${pendingTodos} tasks left`
+              }
+            </span>
+          </div>
+          <button className="new-task-btn">
+            <FaPlus /> New Task
           </button>
-        </form>
+        </header>
 
-        {/* --- List yang diperbarui dengan Ikon dan Checkbox --- */}
-        <ul className="todo-list">
+        <section className="todo-section">
+          <div className="section-header">
+            <h3>My Tasks</h3>
+            <form className="add-form" onSubmit={addTodo}>
+              <input
+                type="text"
+                value={newTodoText}
+                onChange={(e) => setNewTodoText(e.target.value)}
+                placeholder="Add a new task..."
+              />
+              <button type="submit" aria-label="Add task">
+                <FaPlus />
+              </button>
+            </form>
+          </div>
+
           {todos.length === 0 && (
-            <p className="empty-message">Daftar tugas Anda masih kosong.</p>
+            <p className="empty-message">Your task list is empty.</p>
           )}
 
-          {todos.map(todo => (
-            <li key={todo._id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-              
-              {/* Checkbox Kustom */}
-              <div className="checkbox" onClick={() => toggleComplete(todo._id)}>
-                {todo.completed ? <FaCheckCircle /> : <FaRegCircle />}
+          <div className="task-grid">
+            {todos.map(todo => (
+              <div key={todo._id} className={`task-card ${todo.completed ? 'completed' : ''}`}>
+                <div className="card-header">
+                  <div className="checkbox" onClick={() => toggleComplete(todo._id)}>
+                    {todo.completed ? <FaCheckCircle /> : <FaRegCircle />}
+                  </div>
+                  <button className="delete-btn" onClick={() => deleteTodo(todo._id)} aria-label="Delete task">
+                    <FaTrashAlt />
+                  </button>
+                </div>
+                <div className="card-body">
+                  <span className="todo-text">
+                    {todo.text}
+                  </span>
+                  {/* Kita bisa tambahkan tag atau detail lain di sini nanti */}
+                  <div className="task-meta">
+                    <span className="task-tag design">Design</span>
+                    {/* <span className="task-date">Today - 09:00 AM</span> */}
+                  </div>
+                </div>
               </div>
-
-              {/* Teks To-Do */}
-              <span className="todo-text">
-                {todo.text}
-              </span>
-
-              {/* Tombol Hapus dengan Ikon */}
-              <button className="delete-btn" onClick={() => deleteTodo(todo._id)} aria-label="Hapus tugas">
-                <FaTrashAlt />
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
