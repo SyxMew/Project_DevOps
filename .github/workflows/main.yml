@@ -34,7 +34,7 @@ jobs:
     - name: Build and push frontend image
       uses: docker/build-push-action@v4
       with:
-        context: ./frontend # Lokasi Dockerfile frontend
-        file: ./frontend/Dockerfile
+        context: ./Frontend # Lokasi Dockerfile frontend
+        file: ./Frontend/Dockerfile
         push: true
         tags: driansyh/todo-frontend:latest
