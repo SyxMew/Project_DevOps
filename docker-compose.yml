@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  # Service 1: Backend (Server Node.js)
+  server:
+    build: ./BackEnd # (Ganti jika nama folder Anda beda)
+    ports:
+      - "5000:5000"
+    environment:
+      # URL ini akan digunakan oleh server.js
+      - DB_URL=mongodb://mongo:27017/Database
+    depends_on:
+      - mongo # Bilang ke Docker, "tunggu mongo jalan dulu"
+
+  # Service 2: Frontend (React/Nginx)
+  client:
+    build: ./Frontend
+    ports:
+      # Browser akan buka localhost:3000
+      - "3000:80" 
+    depends_on:
+      - server # Tunggu server jalan dulu
+
+  # Service 3: Database (MongoDB)
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017" # Agar Mongo Compass bisa lihat
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data: # Agar data tidak hilang

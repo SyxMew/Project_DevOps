@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+/* --- Reset & Variabel CSS --- */
+:root {
+  --primary-color: #007bff;
+  --primary-dark: #0056b3;
+  --light-color: #ffffff;
+  --dark-color: #333;
+  --grey-light: #f4f7f6;
+  --grey-medium: #eef2f1;
+  --grey-dark: #999;
+  --danger-color: #e74c3c;
+  --danger-dark: #c0392b;
+  --success-color: #2ecc71;
+  --shadow-light: 0 4px 15px rgba(0, 0, 0, 0.06);
+  --shadow-dark: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  /* --- BARU: Background Gradient Keren --- */
+  background: linear-gradient(135deg, #ece9e6 0%, #ffffff 100%);
+  color: var(--dark-color);
+  min-height: 100vh;
+}
+
+/* --- Layout Aplikasi --- */
+.app {
+  display: flex;
+  justify-content: center;
+  padding: 50px 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px; /* Sedikit lebih lebar */
+  background: var(--light-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow-dark);
+  padding: 35px;
+  overflow: hidden; /* Untuk animasi */
+}
+
+/* --- Header & Counter --- */
+.header {
+  border-bottom: 2px solid var(--grey-medium);
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.header h1 {
+  text-align: center;
+  color: var(--dark-color);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.task-counter {
+  text-align: center;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+/* --- Form Input --- */
+.add-form {
+  display: flex;
+  margin-bottom: 25px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-light);
+}
+
+.add-form input {
+  flex-grow: 1;
+  border: 2px solid var(--grey-medium);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+  padding: 12px 18px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.3s ease;
+}
+
+.add-form input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.add-form button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0 22px; /* Lebih pas untuk ikon */
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+  font-size: 20px; /* Ukuran ikon */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.add-form button:hover {
+  background: var(--primary-dark);
+}
+
+/* --- Daftar To-Do --- */
+.todo-list {
+  list-style: none;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 5px; /* Ruang untuk scrollbar */
+}
+
+/* --- Pesan Saat Kosong --- */
+.empty-message {
+  text-align: center;
+  color: var(--grey-dark);
+  padding: 20px;
+}
+
+/* --- Item To-Do --- */
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 10px;
+  background: var(--light-color);
+  border-bottom: 1px solid var(--grey-medium);
+  transition: background 0.2s ease;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-item:hover {
+  background: var(--grey-light);
+}
+
+/* --- Checkbox Kustom --- */
+.checkbox {
+  cursor: pointer;
+  font-size: 22px;
+  margin-right: 15px;
+  color: var(--grey-dark);
+  transition: color 0.3s ease;
+}
+
+.todo-item.completed .checkbox {
+  color: var(--success-color);
+}
+
+.todo-item:hover .checkbox {
+  color: var(--primary-color);
+}
+
+.todo-item.completed:hover .checkbox {
+  color: var(--success-color);
+}
+
+
+/* --- Teks To-Do --- */
+.todo-text {
+  flex-grow: 1;
+  color: var(--dark-color);
+  font-weight: 500;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--grey-dark);
+}
+
+/* --- Tombol Hapus --- */
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--grey-dark);
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: color 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
+}
+
+.todo-item:hover .delete-btn {
+  opacity: 1;
+  color: var(--danger-color);
+}
+
+.delete-btn:hover {
+  color: var(--danger-dark);
+  transform: scale(1.1);
+}
