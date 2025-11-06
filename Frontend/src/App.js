@@ -88,7 +88,7 @@ function App() {
       <main className="main-content">
         <header className="main-header">
           <div className="project-info">
-            <h2>Mantap Jiwa</h2>
+            <h2>My To Do List</h2>
             <span className="task-counter">
               {pendingTodos === 0
                 ? "All tasks completed!"
