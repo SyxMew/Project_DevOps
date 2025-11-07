@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import './App.css'; 
+import './App.css';
 
 const API_URL = "http://localhost:5000";
 
@@ -267,17 +267,18 @@ function TodoItem({ todo, onToggle, onEdit, onDelete }) {
 function NewTodoForm({ onAdd }) {
   const [text, setText] = useState("");
   const [due, setDue] = useState("");
+  const [priority, setPriority] = useState("medium");
   const [tagsRaw, setTagsRaw] = useState("");
 
   const submit = (e) => {
     e.preventDefault();
     if (!text.trim()) return;
     const tags = tagsRaw.split(",").map((t) => t.trim()).filter(Boolean);
-    
-    onAdd({ text: text.trim(), due: due || null, priority: "medium", tags }); 
+    onAdd({ text: text.trim(), due: due || null, priority, tags });
     setText("");
     setDue("");
     setTagsRaw("");
+    setPriority("medium");
   };
 
   return (
@@ -290,7 +291,11 @@ function NewTodoForm({ onAdd }) {
     >
       <div className="form-grid">
         <input className="input-field-span-2" placeholder="Apa yang ingin kamu kerjakan?" value={text} onChange={(e) => setText(e.target.value)} />
-        
+        <select className="select-field" value={priority} onChange={(e) => setPriority(e.target.value)}>
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
         <input type="date" className="input-field" value={due} onChange={(e) => setDue(e.target.value)} />
         <input className="input-field-span-2" placeholder="Tags (pisahkan dengan koma)" value={tagsRaw} onChange={(e) => setTagsRaw(e.target.value)} />
         <div className="form-submit-group">
