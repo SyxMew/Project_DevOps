@@ -1,21 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-// (BARU) Menggunakan ikon yang lebih simpel
-import { FaPlus, FaTrashAlt, FaRegCircle, FaCheckCircle } from 'react-icons/fa';
+import React, { useEffect, useState, useRef } from "react";
+import axios from 'axios'; // <-- DI-IMPORT KEMBALI
 import './App.css'; 
 
-// Pastikan ini adalah alamat backend Anda
+// URL backend Anda (sesuai port di docker-compose.yml)
 const API_URL = 'http://localhost:5000';
 
-function App() {
-  const [todos, setTodos] = useState([]);
-  const [newTodoText, setNewTodoText] = useState('');
+export default function App() {
+  // const [page, setPage] = useState("home"); // Dihapus, kita tidak perlu halaman terpisah
+  const [todos, setTodos] = useState([]); // Akan diisi dari database
+  // const [archive, setArchive] = useState(...); // Dihapus, kita pakai delete
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [sort, setSort] = useState("baru");
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light"); // Biarkan theme di localStorage
 
-  // (READ) Mengambil data saat aplikasi dimuat
+  // (READ) Ambil data dari database saat pertama kali memuat
   useEffect(() => {
     fetchTodos();
   }, []);
 
+  // Efek untuk theme (ini tetap, tidak apa-apa)
+  useEffect(() => { 
+    localStorage.setItem("theme", theme); 
+    document.documentElement.setAttribute("data-theme", theme); 
+  }, [theme]);
+  
+  // (READ) Fungsi untuk mengambil data dari backend
   const fetchTodos = async () => {
     try {
       const response = await axios.get(`${API_URL}/todos`);
@@ -25,102 +35,99 @@ function App() {
     }
   };
 
-  // (CREATE) Menambah todo baru
-  const addTodo = async (e) => {
-    e.preventDefault();
-    if (newTodoText.trim() === '') return;
-
+  // (CREATE) Fungsi untuk menambah data ke backend
+  const addTodo = async (text) => {
+    if (!text.trim()) return;
     try {
-      const response = await axios.post(`${API_URL}/todos`, { text: newTodoText });
-      setTodos([response.data, ...todos]); // Tambah di awal list
-      setNewTodoText('');
+      const response = await axios.post(`${API_URL}/todos`, { text: text });
+      setTodos([response.data, ...todos]); // Tambah data baru ke state
     } catch (error) {
       console.error("Error menambah todo:", error);
     }
   };
 
-  // (UPDATE) Mengubah status selesai/belum
-  const toggleComplete = async (id) => {
+  // (UPDATE) Fungsi untuk toggle status "done" di backend
+  const toggle = async (id) => {
     try {
       const response = await axios.put(`${API_URL}/todos/${id}`);
-      setTodos(todos.map(todo =>
-        todo._id === id ? response.data : todo
+      setTodos(todos.map(t => 
+        t._id === id ? response.data : t // Gunakan _id dari MongoDB
       ));
     } catch (error) {
       console.error("Error update todo:", error);
     }
-  }
+  };
 
-  // (DELETE) Menghapus todo
+  // (DELETE) Fungsi untuk menghapus todo dari backend
+  // Menggantikan fungsi "archiveTodo"
   const deleteTodo = async (id) => {
     try {
       await axios.delete(`${API_URL}/todos/${id}`);
-      setTodos(todos.filter(todo => todo._id !== id));
+      setTodos(todos.filter(t => t._id !== id)); // Gunakan _id dari MongoDB
     } catch (error) {
       console.error("Error menghapus todo:", error);
     }
   };
 
-  // Hitung sisa tugas
-  const pendingTodos = todos.filter(todo => !todo.completed).length;
+  // const dragIndex = useRef(null); // Fitur drag/drop kita nonaktifkan dulu
+  // const onDrop = (e, i) => { ... };
+
+  // Logika filter (sudah benar, tapi kita ganti 'id' ke '_id' dan 'done' ke 'completed')
+  let list = todos.filter(t => t.text.toLowerCase().includes(query.toLowerCase()));
+  if (filter === "done") list = list.filter(t => t.completed);
+  if (filter === "todo") list = list.filter(t => !t.completed);
+  if (sort === "baru") list = [...list].sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt)); // Sort pakai tanggal DB
+  if (sort === "lama") list = [...list].sort((a,b)=> new Date(a.createdAt) - new Date(b.createdAt));
 
   return (
-    <div className="app-container">
-      <div className="todo-box">
-        
-        {/* --- Header --- */}
-        <div className="header">
-          <h1>My To-Do List</h1>
-          <span className="task-counter">
-            {pendingTodos === 0 && todos.length > 0
-              ? "Semua tugas selesai!"
-              : `${pendingTodos} tugas tersisa`
-            }
-          </span>
+    <div className="app">
+      <header>
+        <h1>TodoLux</h1>
+        <nav>
+          {/* Kita hapus tombol "Beranda" dan "Arsip" */}
+          <button className="mode" onClick={()=>setTheme(theme==="dark"?"light":"dark")}>{theme==="dark"?"🌙":"☀️"}</button>
+        </nav>
+      </header>
+
+      <main>
+        <AddTask addTodo={addTodo} />
+        <div className="control">
+          <input placeholder="Cari tugas..." value={query} onChange={e=>setQuery(e.target.value)} />
+          <select value={filter} onChange={e=>setFilter(e.target.value)}>
+            <option value="all">Semua</option><option value="todo">Belum selesai</option><option value="done">Selesai</option>
+          </select>
+          <select value={sort} onChange={e=>setSort(e.target.value)}>
+            <option value="baru">Baru</option><option value="lama">Lama</option>
+          </select>
         </div>
 
-        {/* --- Form Input --- */}
-        <form className="add-form" onSubmit={addTodo}>
-          <input
-            type="text"
-            value={newTodoText}
-            onChange={(e) => setNewTodoText(e.target.value)}
-            placeholder="Tulis tugas baru di sini..."
-          />
-          <button type="submit" aria-label="Tambah tugas">
-            <FaPlus />
-          </button>
-        </form>
-
-        {/* --- Daftar To-Do --- */}
-        <ul className="todo-list">
-          {todos.length === 0 && (
-            <p className="empty-message">Daftar tugas Anda masih kosong.</p>
-          )}
-
-          {todos.map(todo => (
-            <li key={todo._id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-              
-              {/* Checkbox Kustom */}
-              <div className="checkbox" onClick={() => toggleComplete(todo._id)}>
-                {todo.completed ? <FaCheckCircle /> : <FaRegCircle />}
-              </div>
-
-              {/* Teks To-Do */}
-              <span className="todo-text">
-                {todo.text}
-              </span>
-
-              {/* Tombol Hapus */}
-              <button className="delete-btn" onClick={() => deleteTodo(todo._id)} aria-label="Hapus tugas">
-                <FaTrashAlt />
-              </button>
+        <ul>
+          {list.map((t,i)=>(
+            <li key={t._id} // Gunakan _id dari MongoDB
+              // draggable // Fitur drag/drop dinonaktifkan
+              // onDragStart={()=>dragIndex.current=i}
+              // onDragOver={e=>e.preventDefault()}
+              // onDrop={e=>onDrop(e,i)}
+              className={t.completed ? "done" : ""} // Gunakan 'completed' dari model DB
+            >
+              <span onClick={()=>toggle(t._id)}>{t.completed?"✔":"○"}</span>
+              <p>{t.text}</p>
+              {/* Ganti tombol "Arsip" menjadi "Hapus" */}
+              <button onClick={()=>deleteTodo(t._id)}>Hapus</button>
             </li>
           ))}
         </ul>
-      </div>
+      </main>
     </div>
   );
 }
 
-export default App;
+function AddTask({ addTodo }) {
+  const [text, setText] = useState("");
+  return (
+    <form onSubmit={e=>{e.preventDefault(); addTodo(text); setText("");}} className="add">
+      <input value={text} onChange={e=>setText(e.target.value)} placeholder="Tulis tugas baru..." />
+      <button>Tambah</button>
+    </form>
+  );
+}
