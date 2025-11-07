@@ -2,9 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
-import './App.css'; // <-- KITA PAKAI INI SEKARANG
+import './App.css'; 
 
-// URL Backend kita
 const API_URL = "http://localhost:5000";
 
 export default function TodoAppEnhanced() {
@@ -17,7 +16,6 @@ export default function TodoAppEnhanced() {
             <Routes>
               <Route path="/" element={<TodoPage />} />
               <Route path="/archive" element={<ArchivePage />} />
-              {/* <Route path="/about" element={<AboutPage />} /> <-- DIHAPUS */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
@@ -40,7 +38,6 @@ function TopNav() {
       <div className="nav-links">
         <NavLink to="/">Home</NavLink>
         <NavLink to="/archive">Archive</NavLink>
-        {/* <NavLink to="/about">About</NavLink> <-- DIHAPUS */}
       </div>
     </nav>
   );
@@ -54,7 +51,6 @@ function NavLink({ to, children }) {
   );
 }
 
-/* ------------------------- Todo Page ------------------------- */
 function TodoPage() {
   const [todos, setTodos] = useState([]);
   const [query, setQuery] = useState("");
@@ -220,13 +216,6 @@ function TodoPage() {
             <div>Tugas selesai: <strong>{todos.filter(t => t.completed).length}</strong></div>
             <div>Prioritas tinggi: <strong>{todos.filter(t => t.priority === 'high').length}</strong></div>
           </div>
-          {/* BAGIAN TIPS DIHAPUS */}
-          {/*
-          <div className="tips-box">
-            <h4>Tips</h4>
-            <p>Klik dan seret tugas untuk mengurutkan ulang. Gunakan filter dan sort untuk menemukan tugas dengan cepat.</p>
-          </div>
-          */}
         </div>
       </aside>
     </div>
@@ -275,8 +264,43 @@ function TodoItem({ todo, onToggle, onEdit, onDelete }) {
   );
 }
 
+function NewTodoForm({ onAdd }) {
+  const [text, setText] = useState("");
+  const [due, setDue] = useState("");
+  const [tagsRaw, setTagsRaw] = useState("");
 
-/* ------------------------- Archive Page ------------------------- */
+  const submit = (e) => {
+    e.preventDefault();
+    if (!text.trim()) return;
+    const tags = tagsRaw.split(",").map((t) => t.trim()).filter(Boolean);
+    
+    onAdd({ text: text.trim(), due: due || null, priority: "medium", tags }); 
+    setText("");
+    setDue("");
+    setTagsRaw("");
+  };
+
+  return (
+    <motion.form
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      exit={{ opacity: 0, height: 0 }}
+      onSubmit={submit}
+      className="new-todo-form"
+    >
+      <div className="form-grid">
+        <input className="input-field-span-2" placeholder="Apa yang ingin kamu kerjakan?" value={text} onChange={(e) => setText(e.target.value)} />
+        
+        <input type="date" className="input-field" value={due} onChange={(e) => setDue(e.target.value)} />
+        <input className="input-field-span-2" placeholder="Tags (pisahkan dengan koma)" value={tagsRaw} onChange={(e) => setTagsRaw(e.target.value)} />
+        <div className="form-submit-group">
+          <button className="button button-primary" type="submit">Tambah</button>
+        </div>
+      </div>
+    </motion.form>
+  );
+}
+
 function ArchivePage() {
   const [archive, setArchive] = useState([]);
   const navigate = useNavigate();
@@ -332,18 +356,6 @@ function ArchivePage() {
   );
 }
 
-// FUNGSI AboutPage DIHAPUS
-/*
-function AboutPage() {
-  return (
-    <div className="card">
-      <h2 className="card-title">Tentang TodoLux</h2>
-      <p className="about-text">Aplikasi To-do modern dengan fitur: drag-to-reorder, archive, filter, sort, due date, tags, dan multi-page routing. Dibangun untuk menjadi cantik sekaligus produktif.</p>
-    </div>
-  );
-}
-*/
-
 function NotFound() {
   return (
     <div className="card text-center">
@@ -353,7 +365,6 @@ function NotFound() {
   );
 }
 
-/* ------------------------- Helper Functions ------------------------- */
 function sortTodos(list, mode) {
   const arr = Array.from(list);
   if (mode === "createdDesc") return arr.sort((a, b) => (new Date(b.createdAt) - new Date(a.createdAt)));

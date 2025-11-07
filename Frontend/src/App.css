@@ -284,6 +284,33 @@ body {
   margin-top: 4px;
 }
 
+.new-todo-form {
+  background-color: #f8fafc; 
+  padding: 16px;
+  border-radius: 0.5rem;
+  margin-top: 16px;
+  overflow: hidden; 
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 768px) { 
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .input-field-span-2 {
+    grid-column: span 2 / span 2;
+  }
+  .form-submit-group {
+
+    grid-column: span 2 / span 2;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
 .archive-list-item {
   display: flex;
   align-items: center;
