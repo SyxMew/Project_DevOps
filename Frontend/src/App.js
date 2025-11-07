@@ -271,7 +271,7 @@ function TodoItem({ todo, onToggle, onEdit, onDelete }) {
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
