@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const TodoSchema = new mongoose.Schema({
-    // text dan completed sudah ada, tapi kita tambahkan yang baru:
     text: {
         type: String,
         required: true
@@ -12,9 +11,8 @@ const TodoSchema = new mongoose.Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now // Biarkan DB yang menangani ini
+        default: Date.now 
     },
-    // --- KOLOM BARU UNTUK FITUR BARU ---
     due: {
         type: Date,
         default: null
@@ -28,7 +26,7 @@ const TodoSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
-    isArchived: { // Ini untuk halaman "Arsip"
+    isArchived: {
         type: Boolean,
         default: false
     }

@@ -1,8 +1,6 @@
-# 🚀 Proyek To-Do List MERN Stack (Tugas DevOps)
+# 🚀 Proyek To-Do List 
 
-Ini adalah proyek aplikasi To-Do List fullstack yang dibangun menggunakan MERN Stack (MongoDB, Express.js, React, Node.js) dan di-deploy menggunakan teknologi container (Docker) dengan alur CI/CD (GitHub Actions).
-
-Proyek ini dibuat untuk memenuhi tugas mata kuliah DevOps.
+Ini adalah proyek aplikasi To-Do List fullstack yang dibangun menggunakan(MongoDB, Express.js, React, Node.js) dan di-deploy menggunakan teknologi container (Docker) dengan alur CI/CD (GitHub Actions).
 
 ---
 

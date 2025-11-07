@@ -275,47 +275,6 @@ function TodoItem({ todo, onToggle, onEdit, onDelete }) {
   );
 }
 
-function NewTodoForm({ onAdd }) {
-  const [text, setText] = useState("");
-  const [due, setDue] = useState("");
-  const [priority, setPriority] = useState("medium");
-  const [tagsRaw, setTagsRaw] = useState("");
-
-  const submit = (e) => {
-    e.preventDefault();
-    if (!text.trim()) return;
-    const tags = tagsRaw.split(",").map((t) => t.trim()).filter(Boolean);
-    onAdd({ text: text.trim(), due: due || null, priority, tags });
-    setText("");
-    setDue("");
-    setTagsRaw("");
-    setPriority("medium");
-  };
-
-  return (
-    <motion.form
-      initial={{ opacity: 0, height: 0 }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0 }}
-      onSubmit={submit}
-      className="new-todo-form"
-    >
-      <div className="form-grid">
-        <input className="input-field-span-2" placeholder="Apa yang ingin kamu kerjakan?" value={text} onChange={(e) => setText(e.target.value)} />
-        <select className="select-field" value={priority} onChange={(e) => setPriority(e.target.value)}>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-        <input type="date" className="input-field" value={due} onChange={(e) => setDue(e.target.value)} />
-        <input className="input-field-span-2" placeholder="Tags (pisahkan dengan koma)" value={tagsRaw} onChange={(e) => setTagsRaw(e.target.value)} />
-        <div className="form-submit-group">
-          <button className="button button-primary" type="submit">Tambah</button>
-        </div>
-      </div>
-    </motion.form>
-  );
-}
 
 /* ------------------------- Archive Page ------------------------- */
 function ArchivePage() {

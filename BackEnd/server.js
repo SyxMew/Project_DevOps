@@ -6,7 +6,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Gunakan 'mongo' untuk Docker, 'localhost' untuk tes lokal
 const dbURL = process.env.DB_URL || 'mongodb://mongo:27017/todolist'; 
 
 mongoose.connect(dbURL)
@@ -15,7 +14,6 @@ mongoose.connect(dbURL)
 
 const Todo = require('./models/Todo');
 
-// --- RUTE BARU YANG SUDAH DI-UPGRADE ---
 
 // 1. (READ) GET SEMUA TUGAS (YANG TIDAK DIARSIP)
 app.get('/todos', async (req, res) => {
@@ -54,7 +52,7 @@ app.put('/todos/:id', async (req, res) => {
         const updatedTodo = await Todo.findByIdAndUpdate(
             req.params.id,
             { text, priority, due, tags },
-            { new: true } // Kirim kembali dokumen yang sudah di-update
+            { new: true } 
         );
         res.json(updatedTodo);
     } catch (err) { res.status(500).json({ error: err.message }); }
@@ -75,7 +73,7 @@ app.put('/todos/archive/:id', async (req, res) => {
     try {
         const updatedTodo = await Todo.findByIdAndUpdate(
             req.params.id,
-            { isArchived: true, completed: false }, // Reset status saat diarsip
+            { isArchived: true, completed: false },
             { new: true }
         );
         res.json(updatedTodo);
