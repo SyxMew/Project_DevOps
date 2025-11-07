@@ -136,7 +136,7 @@ function TodoPage() {
         <div className="card">
           <div className="flex-between">
             <div>
-              <h2 className="card-title">My Tasks</h2>
+              <h2 className="card-title">Mantap Jiwa</h2>
               <p className="card-subtitle">{pendingCount} tugas belum selesai — buat hari ini terasa produktif ✨</p>
             </div>
             <div className="button-group">
