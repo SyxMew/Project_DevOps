@@ -10,14 +10,14 @@ const API_URL = "http://localhost:5000";
 export default function TodoAppEnhanced() {
   return (
     <Router>
-      <div className="app-container"> {/* Ganti dari tailwind */}
+      <div className="app-container">
         <div className="main-content">
           <TopNav />
           <main className="main-section">
             <Routes>
               <Route path="/" element={<TodoPage />} />
               <Route path="/archive" element={<ArchivePage />} />
-              <Route path="/about" element={<AboutPage />} />
+              {/* <Route path="/about" element={<AboutPage />} /> <-- DIHAPUS */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
@@ -40,7 +40,7 @@ function TopNav() {
       <div className="nav-links">
         <NavLink to="/">Home</NavLink>
         <NavLink to="/archive">Archive</NavLink>
-        <NavLink to="/about">About</NavLink>
+        {/* <NavLink to="/about">About</NavLink> <-- DIHAPUS */}
       </div>
     </nav>
   );
@@ -220,10 +220,13 @@ function TodoPage() {
             <div>Tugas selesai: <strong>{todos.filter(t => t.completed).length}</strong></div>
             <div>Prioritas tinggi: <strong>{todos.filter(t => t.priority === 'high').length}</strong></div>
           </div>
+          {/* BAGIAN TIPS DIHAPUS */}
+          {/*
           <div className="tips-box">
             <h4>Tips</h4>
             <p>Klik dan seret tugas untuk mengurutkan ulang. Gunakan filter dan sort untuk menemukan tugas dengan cepat.</p>
           </div>
+          */}
         </div>
       </aside>
     </div>
@@ -268,7 +271,7 @@ function TodoItem({ todo, onToggle, onEdit, onDelete }) {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -370,6 +373,8 @@ function ArchivePage() {
   );
 }
 
+// FUNGSI AboutPage DIHAPUS
+/*
 function AboutPage() {
   return (
     <div className="card">
@@ -378,6 +383,7 @@ function AboutPage() {
     </div>
   );
 }
+*/
 
 function NotFound() {
   return (
